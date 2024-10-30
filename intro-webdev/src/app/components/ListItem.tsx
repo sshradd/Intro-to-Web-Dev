@@ -19,22 +19,25 @@ const ListItem: React.FC<ListItemProps> = ({
   toggle,
 }) => {
   return (
-    <div className="flex items-center my-3 gap-2">
+    <div className="flex items-center my-3 gap-1 ">
       <div
         onClick={() => {
           toggle(id);
         }}
         className="flex flex-1 items-center cursor-pointer"
       >
-        {isComplete ? <FaRegSquareCheck /> : <FaRegSquare />}
-        <p className="text-slate-700 ml-4 text-18">{text}</p>
+        {isComplete ? <FaRegSquareCheck style={{ color: 'rgb(51 65 85)' }} size="20px"/> : <FaRegSquare style={{ color: 'rgb(51 65 85)' }} size="20px"/>}
+        <p className="text-slate-700 ml-4 text-lg">{text}</p>
       </div>
       <FaRegSquareMinus
         className="cursor-pointer"
         onClick={() => {
           deleteTodo(id);
         }}
-      />
+        style={{ color: 'rgb(51 65 85)' }}
+        size="20px"
+        /> 
+      
     </div>
   );
 };

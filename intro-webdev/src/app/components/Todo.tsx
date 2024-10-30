@@ -64,8 +64,8 @@ const Todo = () => {
   return (
     <div className="bg-white place-self-center w-11/12 max-w-md flex flex-col p-7 min-h-96 rounded-xl">
       <div className="flex items-center mt-7 gap-2">
-        <FaClipboardCheck size="32px" />
-        <h1 className="text-3xl font-semibold">To-do List</h1>
+        <FaClipboardCheck style={{ color: 'rgb(30 58 138)' }} size="32px" />
+        <h1 className="text-3xl font-semibold text-blue-900">To-do List</h1>
       </div>
 
       {/*----input---*/}
@@ -78,7 +78,7 @@ const Todo = () => {
         ></input>
         <button
           onClick={add}
-          className="border-none rounded-full bg-blue-300 w-24 h-10 text-black text-lg font-medium cursor-pointer"
+          className="border-none rounded-full bg-blue-300 w-24 h-10 text-white text-lg font-medium cursor-pointer"
         >
           ADD +
         </button>
