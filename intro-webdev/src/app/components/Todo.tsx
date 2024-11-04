@@ -64,14 +64,14 @@ const Todo = () => {
         <div style={{ color: 'rgb(30 58 138)' }}>
           <FaClipboardCheck  size="32px" />
         </div>
-        <h1 className="text-3xl font-semibold text-blue-900">To-do List</h1>
+        <h1 className="text-3xl font-semibold text-blue-900 font-fraunces">To-do List</h1>
       </div>
 
       {/*----input---*/}
       <div className="flex items-center my-7 bg-gray-200 rounded-full">
         <input
           ref={inputRef}
-          className="bg-transparent border-0 outline-none flex-1 h-10 pl-6 pr-2 placeholder: text-slate-600"
+          className="bg-transparent border-0 outline-none flex-1 h-10 pl-6 pr-2 placeholder: text-slate-600 "
           type="text"
           placeholder="Add task"
         ></input>

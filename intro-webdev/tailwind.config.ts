@@ -1,8 +1,17 @@
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+// tailwind.config.js
+const { fontFamily } = require('tailwindcss/defaultTheme');
+
+module.exports = {
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx}", // adjust to your file paths
+  ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        montserrat: ['var(--font-montserrat)', ...fontFamily.sans],
+        fraunces: ['var(--font-fraunces)', ...fontFamily.serif],
+      },
+    },
   },
   plugins: [],
 };
