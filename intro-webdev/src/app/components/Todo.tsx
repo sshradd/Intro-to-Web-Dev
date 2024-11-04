@@ -1,5 +1,8 @@
-'use client'
+// /components/Todo.tsx
+
+'use client';
 import { useRef, useState, useEffect } from "react";
+import axios from "axios";
 import { FaClipboardCheck } from "react-icons/fa6";
 import ListItems from "./ListItem";
 
@@ -11,52 +14,75 @@ interface Todo {
 }
 
 const Todo = () => {
-  //ensuring you don't accidentally access properties on a null value.
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [todoList, setTodoList] = useState<Todo[]>([]);
 
-  const toggle = (id: number) => {
-    setTodoList((prvTodos) => {
-      return prvTodos.map((todo) => {
-        if (todo.id === id) return { ...todo, isComplete: !todo.isComplete };
-        return todo;
-      });
-    });
-  };
+  // Fetch existing todos from MongoDB when the component mounts
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const response = await axios.get("/api/todos");
+        setTodoList(response.data); // Load fetched todos into state
+      } catch (error) {
+        console.error("Error fetching todos:", error);
+      }
+    };
 
-  //it will return ALL the todos except the one the user wants to delete
-  const deleteTodo = (id: number) => {
-    setTodoList((prvTodos) => {
-      return prvTodos.filter((todo) => todo.id !== id);
-    });
-  };
+    fetchTodos();
+  }, []);
 
-  const add = () => {
-    // Ensure inputRef.current exists before accessing .value
+  // Function to add a new todo item
+  const addTodo = async () => {
     const inputText = inputRef.current?.value.trim() || "";
+    if (!inputText) return; // Return if input is empty
 
-    //if add is clicked and there is nothing in the input field
-    //nothing will happen
-    if (inputText === "") {
-      return null;
-    }
-    const newTodo = {
+    const newTodo: Todo = {
       id: Date.now(),
       text: inputText,
       isComplete: false,
     };
 
-    //spread opperator used to combine previous and new todos
-    setTodoList((prev: any) => [...prev, newTodo]);
-    //clear the input field
-    if (inputRef.current) {
-      inputRef.current.value = "";
+    try {
+      const response = await axios.post("/api/todos", newTodo); // Save new todo to MongoDB
+      setTodoList((prev) => [...prev, response.data]); // Use response from server to get the saved todo
+      if (inputRef.current) inputRef.current.value = ""; // Clear input
+    } catch (error) {
+      console.error("Error adding todo:", error);
     }
   };
 
-  useEffect(() => {
-    console.log(todoList);
-  }, [todoList]);
+  // Function to toggle completion status of a todo item
+  const toggle = async (id: number) => {
+    const todoToUpdate = todoList.find(todo => todo.id === id);
+    if (!todoToUpdate) return;
+
+    const updatedTodo = { ...todoToUpdate, isComplete: !todoToUpdate.isComplete };
+
+    setTodoList((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? updatedTodo : todo
+      )
+    );
+
+    // Update MongoDB with new completion status
+    try {
+      await axios.put("/api/todos", { id, isComplete: updatedTodo.isComplete }); // Update the completion status
+    } catch (error) {
+      console.error("Error toggling todo:", error);
+    }
+  };
+
+  // Function to delete a todo item
+  const deleteTodo = async (id: number) => {
+    setTodoList((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+
+    // Delete from MongoDB
+    try {
+      await axios.delete("/api/todos", { data: { id } }); // Pass the id in the request body
+    } catch (error) {
+      console.error("Error deleting todo:", error);
+    }
+  };
 
   return (
     <div className="bg-white place-self-center w-11/12 max-w-md flex flex-col p-7 min-h-96 rounded-xl">
@@ -71,12 +97,12 @@ const Todo = () => {
       <div className="flex items-center my-7 bg-gray-200 rounded-full">
         <input
           ref={inputRef}
-          className="bg-transparent border-0 outline-none flex-1 h-10 pl-6 pr-2 placeholder: text-slate-600"
+          className="bg-transparent border-0 outline-none flex-1 h-10 pl-6 pr-2 placeholder:text-slate-600"
           type="text"
           placeholder="Add task"
-        ></input>
+        />
         <button
-          onClick={add}
+          onClick={addTodo}
           className="border-none rounded-full bg-blue-300 w-24 h-10 text-white text-lg font-medium cursor-pointer"
         >
           ADD +
@@ -85,19 +111,16 @@ const Todo = () => {
 
       {/*----list items---*/}
       <div>
-        {/* maps array objects to display*/}
-        {todoList.map((item: any, index: number) => {
-          return (
-            <ListItems
-              key={index}
-              text={item.text}
-              id={item.id}
-              isComplete={item.isComplete}
-              deleteTodo={deleteTodo}
-              toggle={toggle}
-            />
-          );
-        })}
+        {todoList.map((item) => (
+          <ListItems
+            key={item.id} // Use item.id instead of index for better performance
+            text={item.text}
+            id={item.id}
+            isComplete={item.isComplete}
+            deleteTodo={deleteTodo}
+            toggle={toggle}
+          />
+        ))}
       </div>
     </div>
   );
