@@ -5,9 +5,6 @@ import ListItems from "./ListItem";
 
 // Define the type for a todo item
 interface Todo {
-  map(
-    arg0: (item: any, index: number) => import("react/jsx-runtime").JSX.Element
-  ): import("react").ReactNode;
   id: number;
   text: string;
   isComplete: boolean;
@@ -64,7 +61,9 @@ const Todo = () => {
   return (
     <div className="bg-white place-self-center w-11/12 max-w-md flex flex-col p-7 min-h-96 rounded-xl">
       <div className="flex items-center mt-7 gap-2">
-        <FaClipboardCheck style={{ color: 'rgb(30 58 138)' }} size="32px" />
+        <div style={{ color: 'rgb(30 58 138)' }}>
+          <FaClipboardCheck  size="32px" />
+        </div>
         <h1 className="text-3xl font-semibold text-blue-900">To-do List</h1>
       </div>
 

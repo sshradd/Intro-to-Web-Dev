@@ -1,7 +1,5 @@
 import React from "react";
-import { FaRegSquare } from "react-icons/fa6";
-import { FaRegSquareCheck } from "react-icons/fa6";
-import { FaRegSquareMinus } from "react-icons/fa6";
+import { FaRegSquare, FaRegSquareCheck, FaRegSquareMinus } from "react-icons/fa6";
 
 interface ListItemProps {
   text: string;
@@ -11,33 +9,32 @@ interface ListItemProps {
   toggle: any;
 }
 
-const ListItem: React.FC<ListItemProps> = ({
+const ListItem = ({
   text,
   id,
   isComplete,
   deleteTodo,
   toggle,
-}) => {
+}: ListItemProps) => {
   return (
-    <div className="flex items-center my-3 gap-1 ">
+    <div className="flex items-center my-3 gap-1">
       <div
-        onClick={() => {
-          toggle(id);
-        }}
+        onClick={() => toggle(id)}
         className="flex flex-1 items-center cursor-pointer"
       >
-        {isComplete ? <FaRegSquareCheck style={{ color: 'rgb(51 65 85)' }} size="20px"/> : <FaRegSquare style={{ color: 'rgb(51 65 85)' }} size="20px"/>}
+        <div style={{ color: 'rgb(51 65 85)' }}>
+          {isComplete ? (
+            <FaRegSquareCheck size="20px" />
+          ) : (
+            <FaRegSquare size="20px" />
+          )}
+        </div>
         <p className="text-slate-700 ml-4 text-lg">{text}</p>
       </div>
-      <FaRegSquareMinus
-        className="cursor-pointer"
-        onClick={() => {
-          deleteTodo(id);
-        }}
-        style={{ color: 'rgb(51 65 85)' }}
-        size="20px"
-        /> 
       
+      <div onClick={() => deleteTodo(id)} style={{ color: 'rgb(51 65 85)', cursor: 'pointer' }}>
+        <FaRegSquareMinus size="20px" />
+      </div>
     </div>
   );
 };
